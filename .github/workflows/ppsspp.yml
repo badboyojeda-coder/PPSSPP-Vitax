@@ -1,22 +1,28 @@
-name: Descargar PPSSPP
+name: PPSSPP Vita Configure Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  download:
+  configure:
     runs-on: ubuntu-latest
+    container:
+      image: vitasdk/vitasdk:2026.08
 
     steps:
-      - name: Descargar código fuente
+      - name: Descargar PPSSPP
         uses: actions/checkout@v4
         with:
           repository: hrydgard/ppsspp
           path: PPSSPP
           submodules: recursive
 
-      - name: Comprobar descarga
+      - name: Comprobar herramientas
         run: |
-          ls -la PPSSPP
-          test -f PPSSPP/CMakeLists.txt
-          echo "Código fuente de PPSSPP descargado correctamente"
+          cmake --version
+          arm-vita-eabi-gcc --version
+
+      - name: Intentar configurar
+        run: |
+          cmake -S PPSSPP -B build \
+            -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake"
