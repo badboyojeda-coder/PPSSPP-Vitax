@@ -1,0 +1,37 @@
+
+name: SDL3 Vita Build Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: vitasdk/vitasdk:2026.08
+
+    steps:
+      - name: Descargar SDL3
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: SDL
+
+      - name: Compilar SDL3 para PS Vita
+        run: |
+          cmake -S SDL -B build \
+            -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DVIDEO_VITA_PVR=ON
+
+          cmake --build build --parallel 2
+
+          cmake --install build --prefix "$GITHUB_WORKSPACE/sdl3-install"
+
+      - name: Guardar SDL3
+        uses: actions/upload-artifact@v4
+        with:
+          name: SDL3-Vita
+          path: sdl3-install/
+          if-no-files-found: error
+          
