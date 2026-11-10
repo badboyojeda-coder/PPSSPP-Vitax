@@ -11,13 +11,7 @@ jobs:
       image: vitasdk/vitasdk:2026.08
 
     steps:
-      - name: Descargar SDL3
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL
-          path: SDL
-
-      - name: Compilar SDL3 para PS Vita
+            - name: Compilar SDL3 para PS Vita
         run: |
           cmake -S SDL -B build \
             -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake" \
