@@ -23,6 +23,8 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake" \
             -DCMAKE_BUILD_TYPE=Release \
             -DVIDEO_VITA_PVR=ON
+            -DSDL_TESTS=OFF \
+            -DSDL_TEST_LIBRARY=OFF
 
           cmake --build build --parallel 2
 
