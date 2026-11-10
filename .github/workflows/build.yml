@@ -1,0 +1,19 @@
+name: VitaSDK Test Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download VitaSDK
+        run: |
+          git clone --depth 1 https://github.com/vitasdk/samples.git samples
+
+      - name: Show sample files
+        run: |
+          ls -la samples
