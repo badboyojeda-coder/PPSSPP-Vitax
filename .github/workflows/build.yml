@@ -9,11 +9,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Download VitaSDK
-        run: |
-          git clone --depth 1 https://github.com/vitasdk/samples.git samples
+    container:
+      image: vitasdk/vitasdk:2026.08
 
-      - name: Show sample files
+    steps:
+      - name: Descargar ejemplos
+        run: git clone --depth 1 https://github.com/vitasdk/samples.git samples
+
+      - name: Compilar aplicación de prueba
         run: |
-          ls -la samples
+          cmake -S samples/hello_world -B build \
+            -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake"
+          cmake --build build --parallel 2
+          find build -name "*.vpk" -print
+
+      - name: Guardar VPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: VitaSDK-Test-VPK
+          path: build/**/*.vpk
+          if-no-files-found: error
